@@ -1,6 +1,4 @@
 def next_sum(level, now_idx):
-    global cnt, now_sum
-
     if now_sum == s:
         cnt += 1
     if level > n:
