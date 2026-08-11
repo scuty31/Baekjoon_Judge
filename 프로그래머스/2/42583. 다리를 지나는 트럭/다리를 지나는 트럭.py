@@ -2,41 +2,27 @@ from collections import deque
 
 
 def solution(bridge_length, weight, truck_weights):
-    answer = 1
-    truck_weights = list(reversed(truck_weights))
+    answer = 0
+    bridge = deque() # bridge 위에 올라간 트럭들
+    truck_idx = 0
 
-    bridge = deque()
-    time = 1
+    while truck_idx < len(truck_weights):
+        answer += 1
 
-    truck = truck_weights.pop()
-    bridge.append((truck, time + bridge_length))
-    weight -= truck
-    truck_to_bridge = True
+        # 현재 시간에 다리 위의 트럭이 빠져나간다면 빠져나감
+        if bridge and answer >= bridge[0][1]:
+            truck, _ = bridge.popleft()
+            weight += truck
 
-    while truck_weights:
-        # 다리에 트럭이 진입할 수 있는지 확인
-        if len(bridge) < bridge_length and weight >= truck_weights[-1]:
-            if truck_to_bridge:
-                time += 1
+        truck = truck_weights[truck_idx]
 
-            # 현재 시간에 빠져나가는 트럭이 있는지 확인
-            if bridge and bridge[0][1] == time:
-                out_truck, _ = bridge.popleft()
-                truck_to_bridge = False
-                weight += out_truck
-
-            truck = truck_weights.pop()
-            bridge.append((truck, time + bridge_length))
+        # 트럭이 다리 위에 올라갈 수 있다면 올라감.
+        if truck <= weight:
+            bridge.append((truck, answer + bridge_length))
             weight -= truck
-            truck_to_bridge = True
+            truck_idx += 1
 
         else:
-            out_truck, time = bridge.popleft()
-            truck_to_bridge = False
-            weight += out_truck
+            answer = bridge[0][1] - 1
 
-    # 다리 위에 트럭이 남아 있다면 마지막 트럭이 다리를 빠져나오는 시간까지 계산
-    if bridge:
-        answer = bridge[-1][-1]
-
-    return answer
+    return bridge[-1][1]
