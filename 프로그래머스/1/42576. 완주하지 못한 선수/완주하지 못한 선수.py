@@ -1,19 +1,14 @@
+from collections import Counter
+
 def solution(participant, completion):
     answer = ''
-    people = dict()
+    part_count = Counter(participant)
     
-    for p in participant:
-        if people.get(p):
-            people[p] += 1
-        else:
-            people[p] = 1
+    for comp in completion:
+        part_count[comp] -= 1
     
-    for c in completion:
-        people[c] -= 1
-    
-    for person, complete in people.items():
-        if complete:
-            answer = person
-            break
+    for person, cnt in part_count.items():
+        if cnt == 1:
+            return person
     
     return answer
