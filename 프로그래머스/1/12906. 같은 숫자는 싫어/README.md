@@ -1,10 +1,10 @@
 # [level 1] 같은 숫자는 싫어 - 12906 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12906) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12906?language=cpp) 
 
 ### 성능 요약
 
-메모리: 26.5 MB, 시간: 69.40 ms
+메모리: 106 MB, 시간: 95.92 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2026년 08월 10일 10:16:04
+2026년 08월 30일 13:09:34
 
 ### 문제 설명
 
