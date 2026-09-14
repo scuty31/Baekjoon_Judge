@@ -1,31 +1,32 @@
 #include <string>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
 vector<int> solution(vector<int> progresses, vector<int> speeds) {
     vector<int> answer;
-    vector<int> left;
+    vector<int> progress_left_day;
     
-    for(int i=0; i<progresses.size(); i++){
-        int left_progresses = (100 - progresses[i]);
-        int left_time = left_progresses / speeds[i];
-        
-        if (left_progresses % speeds[i]){
-            left_time++;
+    for(int i = 0; i<progresses.size(); i++){
+        int left_day = (100 - progresses[i]) / speeds[i];
+        if ((100 - progresses[i]) % speeds[i]){
+            left_day++;
         }
-        
-        left.push_back(left_time);
+        progress_left_day.push_back(left_day);
     }
+
+    int stack_idx = -1;
+    int progress_left = 0;
     
-    int last_time = 0;
-    for(int j=0; j<left.size(); j++){
-        if (last_time < left[j]){
-            last_time = left[j];
-            answer.push_back(1);            
+    for(int i = 0; i<progresses.size(); i++){
+        if (progress_left < progress_left_day[i]){
+            progress_left = progress_left_day[i];
+            stack_idx++;
+            answer.push_back(1);
         }
         else{
-            answer[answer.size()-1]++;
+            answer[stack_idx]++;
         }
     }
     
