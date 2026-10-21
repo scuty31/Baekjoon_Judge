@@ -3,26 +3,54 @@ from collections import deque
 
 def solution(bridge_length, weight, truck_weights):
     answer = 0
-    bridge = deque() # bridge 위에 올라간 트럭들
-    truck_idx = 0
+    now_time = 0
+    bridge = deque()
+    i = 0
 
-    while truck_idx < len(truck_weights):
-        answer += 1
+    while i < len(truck_weights):
+        truck_weight = truck_weights[i]
 
-        # 현재 시간에 다리 위의 트럭이 빠져나간다면 빠져나감
-        if bridge and answer >= bridge[0][1]:
-            truck, _ = bridge.popleft()
-            weight += truck
+        # 다리 위에 트럭이 없으면 트럭을 올린다.
+        if len(bridge) == 0:
+            now_time += 1
+            bridge.append((truck_weight, now_time + bridge_length))
+            weight -= truck_weight
+            i += 1
+            continue
 
-        truck = truck_weights[truck_idx]
+        # 다음 트럭이 올라갈 수 있다면 다음 트럭을 올린다. 1초가 지나간다.
+        if len(bridge) < bridge_length and weight >= truck_weight:
+            now_time += 1
+            bridge.append((truck_weight, now_time + bridge_length))
+            weight -= truck_weight
+            i += 1
 
-        # 트럭이 다리 위에 올라갈 수 있다면 올라감.
-        if truck <= weight:
-            bridge.append((truck, answer + bridge_length))
-            weight -= truck
-            truck_idx += 1
+            # 이 때, 앞의 트럭이 빠져나오는 시간이라면 빠져나온다.
+            while bridge:
+                if bridge[0][1] <= now_time:
+                    bridge_truck_weight, _ = bridge.popleft()
+                    weight += bridge_truck_weight
+                else:
+                    break
 
+        # 트럭이 올라갈 수 없다면 다리 위의 트럭이 빠져나온다. 그만큼 시간이 지난다.
         else:
-            answer = bridge[0][1] - 1
+            bridge_truck_weight, bridge_time = bridge.popleft()
+            weight += bridge_truck_weight
 
-    return bridge[-1][1]
+            if now_time < bridge_time:
+                now_time = bridge_time
+
+            if weight >= truck_weight:
+                bridge.append((truck_weight, now_time + bridge_length))
+                weight -= truck_weight
+                i += 1
+
+    if bridge:
+        bridge_time = bridge[-1][1]
+        if now_time < bridge_time:
+            now_time = bridge_time
+
+    answer = now_time
+
+    return answer
