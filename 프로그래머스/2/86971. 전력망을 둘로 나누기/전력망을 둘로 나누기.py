@@ -1,43 +1,45 @@
-from collections import deque
-
-
-def check_wires(n, graph, s, e):
-    result = 0
-    visited = [False for _ in range(n+1)]
-    q = deque()
-    
-    q.append(s)
-    visited[s] = True
-    
-    while q:
-        node = q.popleft()
-
-        for next_node in graph[node]:
-            if next_node == e:
-                continue
-            if visited[next_node]:
-                continue
-
-            visited[next_node] = True
-            result += 1
-            q.append(next_node)
-    
-    return result
-
-
 def solution(n, wires):
     answer = n
-    graph = [[] for _ in range(n+1)]
     
-    for s, e in wires:
-        graph[s].append(e)
-        graph[e].append(s)
+    parent = list(range(n+1))
     
-    for s, e in wires:
-        left = check_wires(n, graph, s, e)
-        right = check_wires(n, graph, e, s)
+    def find(x):
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
         
-        result = max(left, right) - min(left, right)
+        return x
+    
+    def union(a, b):
+        ra = find(a)
+        rb = find(b)
+        
+        if ra == rb:
+            return False
+        parent[ra] = rb
+        
+        return True
+    
+    for i in range(len(wires)):
+        parent = list(range(n+1))
+        
+        for j in range(len(wires)):
+            if i == j:
+                continue
+            union(wires[j][0], wires[j][1])
+        
+        l = find(wires[i][0])
+        r = find(wires[i][1])
+        l_cnt = 0
+        r_cnt = 0
+        
+        for k in range(1, n+1):
+            if find(k) == l:
+                l_cnt += 1
+            else:
+                r_cnt += 1
+        
+        result = max(l_cnt, r_cnt) - min(l_cnt, r_cnt)
         answer = min(answer, result)
-        
+    
     return answer
