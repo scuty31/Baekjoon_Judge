@@ -8,20 +8,27 @@ def solution(n, costs):
             x = parent[x]
         
         return x
-        
-    edges = sorted(list((w, a, b) for a, b, w in costs))
     
-    for w, a, b in edges:
+    def union(a, b):
         ra = find(a)
         rb = find(b)
-        cnt = 0
         
         if ra != rb:
             parent[ra] = rb
-            answer += w
-            cnt += 1
+            return True
         
+        return False
+    
+    edges = sorted(list((w, s, e) for s, e, w in costs))
+    
+    cnt = 0
+    
+    for w, s, e in edges:
+        if union(s, e):
+            cnt += 1
+            answer += w
+            
             if cnt == n-1:
                 break
-    
+                
     return answer
