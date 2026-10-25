@@ -3,32 +3,29 @@ def solution(n, costs):
     parent = list(range(n))
     
     def find(x):
-        while parent[x] != x:
+        while x != parent[x]:
             parent[x] = parent[parent[x]]
             x = parent[x]
         
         return x
     
     def union(a, b):
-        ra = find(a)
-        rb = find(b)
+        ra, rb = find(a), find(b)
         
         if ra != rb:
             parent[ra] = rb
             return True
-        
         return False
     
-    edges = sorted(list((w, s, e) for s, e, w in costs))
-    
+    edges = sorted(list((w, a, b) for a, b, w in costs))
     cnt = 0
     
-    for w, s, e in edges:
-        if union(s, e):
-            cnt += 1
+    for w, a, b in edges:
+        if union(a, b):
             answer += w
+            cnt += 1
             
             if cnt == n-1:
                 break
-                
+        
     return answer
