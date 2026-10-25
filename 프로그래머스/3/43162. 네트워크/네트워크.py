@@ -3,22 +3,18 @@ def solution(n, computers):
     parent = list(range(n))
     
     def find(x):
-        while parent[x] != x:
+        while x != parent[x]:
             parent[x] = parent[parent[x]]
             x = parent[x]
-        
         return x
     
     def union(a, b):
-        ra = find(a)
-        rb = find(b)
+        ra, rb = find(a), find(b)
         
-        if ra == rb:
-            return False
-        
-        parent[ra] = rb
-        
-        return True
+        if ra != rb:
+            parent[ra] = rb
+            return True
+        return False
     
     for i in range(n):
         for j in range(n):
